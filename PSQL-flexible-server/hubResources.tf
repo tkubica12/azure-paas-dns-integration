@@ -1,6 +1,6 @@
 # Hub Resource Group
 resource "azurerm_resource_group" "hub" {
-  name     = "hub-rg"
+  name     = "psql-hub-rg"
   location = "West Europe"
 }
 

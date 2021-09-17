@@ -1,6 +1,6 @@
 # DNS resource group
 resource "azurerm_resource_group" "dns" {
-  name     = "dns-rg"
+  name     = "psql-dns-rg"
   location = "West Europe"
 }
 

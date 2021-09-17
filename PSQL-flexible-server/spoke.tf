@@ -1,6 +1,6 @@
 # Spoke Resource Group
 resource "azurerm_resource_group" "spoke" {
-  name     = "spoke-rg"
+  name     = "psqlspoke-rg"
   location = "West Europe"
 }
 
