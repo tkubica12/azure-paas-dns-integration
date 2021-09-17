@@ -94,7 +94,7 @@ resource "azurerm_network_interface" "hubvmdns" {
         name                          = "myNicConfiguration"
         subnet_id                     = azurerm_subnet.hubdns.id
         private_ip_address_allocation = "Static"
-        private_ip_address            = "10.1.0.4"
+        private_ip_address            = "10.0.1.4"
     }
 }
 
@@ -130,15 +130,15 @@ resource "azurerm_linux_virtual_machine" "hubvmdns" {
 
 resource "azurerm_virtual_machine_extension" "hubvmdns" {
   name                 = "hubvmdns"
-  virtual_machine_id   = azurerm_virtual_machine.hubvmdns.id
+  virtual_machine_id   = azurerm_linux_virtual_machine.hubvmdns.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.1"
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "installBind.sh",
-        "fileUris": ["https://.."],
+        "commandToExecute": "./installBind.sh",
+        "fileUris": ["https://github.com/tkubica12/azure-paas-dns-integration/raw/master/scripts/installBind.sh"]
     }
 SETTINGS
 }
