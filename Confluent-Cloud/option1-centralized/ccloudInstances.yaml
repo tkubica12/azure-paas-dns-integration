@@ -1,0 +1,10 @@
+42j0o:
+  description: Kafka cluster for team A
+  az1: 10.1.0.8
+  az2: 10.1.0.9
+  az3: 10.1.0.10
+55f3s:
+  description: Kafka cluster for team B
+  az1: 10.0.1.10
+  az2: 10.0.1.11
+  az3: 10.0.1.12

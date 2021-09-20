@@ -4,6 +4,9 @@ Azure PaaS can be accessed from VNET using Private Endpoint technology or get in
 # Azure Database - Flexible Server (PostgreSQL, MySQL)
 [README](PSQL-flexible-server/README.md)
 
+# Azure Kubernetes Service - private cluster
+TBD
+
 # Private Endpoint for simple (single endpoint) services such as Azure SQL
 TBD
 

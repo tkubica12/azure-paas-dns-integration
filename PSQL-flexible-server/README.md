@@ -7,6 +7,9 @@ Use Terraform to deploy hub and spoke environment, DNS, VMs for testing and othe
 - VM in spoke to test DNS resolution - access it via serial console in portal (or add public IP and modify NSG)
 
 # Check how DNS works
+Connect to appvm and make sure DNS works properly.
+
+```
 tomas@appvm:~$ dig psql1.postgres.database.azure.com
 
 ; <<>> DiG 9.11.3-1ubuntu1.15-Ubuntu <<>> psql1.postgres.database.azure.com
@@ -50,21 +53,30 @@ abaf971a29f4.mycustomname.postgres.database.azure.com. 29 IN A 10.1.0.4
 ;; SERVER: 127.0.0.53#53(127.0.0.53)
 ;; WHEN: Thu Sep 16 11:31:41 UTC 2021
 ;; MSG SIZE  rcvd: 122
-
+```
 
 # RBAC test
+Simulate spoke user creating resource using CLI to make sure least privilege to DNS zones is working fine.
 
-## Create service principal
+## Get service principal
+```bash
 export password=$(terraform output -raw client_secret)
 export spid=$(terraform output -raw client_id)
 export paasSubnetId=$(terraform output -raw paasSubnetId)
 export dnsId=$(terraform output -raw dnsId)
+```
 
 ## Login to Azure with SP
+```
 az login --service-principal --username $spid --password $password --tenant microsoft.com
+```
 
-# Create PostgreSQL Flexible Server
+## Create PostgreSQL Flexible Server
+```
 az postgres flexible-server create -g spoke-rg -n psqlnew --private-dns-zone $dnsId --sku-name Standard_B1ms --subnet $paasSubnetId --tier Burstable -u tomas -p Azure12345678
+```
 
-# Delete PostgreSQL Flexible Server
+## Delete PostgreSQL Flexible Server
+```
 az postgres flexible-server delete -g spoke-rg -n psqlnew
+```

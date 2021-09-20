@@ -1,6 +1,6 @@
 # Spoke Resource Group
 resource "azurerm_resource_group" "spoke" {
-  name     = "psql-spoke-rg"
+  name     = "ccloud-spoke-rg"
   location = "West Europe"
 }
 
@@ -19,15 +19,6 @@ resource "azurerm_subnet" "spokepaas" {
   resource_group_name  = azurerm_resource_group.spoke.name
   virtual_network_name = azurerm_virtual_network.spoke.name
   address_prefixes     = ["10.1.0.0/24"]
-  delegation {
-    name = "fs"
-    service_delegation {
-      name = "Microsoft.DBforPostgreSQL/flexibleServers"
-      actions = [
-        "Microsoft.Network/virtualNetworks/subnets/join/action",
-      ]
-    }
-  }
 }
 
 resource "azurerm_subnet" "spokevm" {
@@ -42,41 +33,6 @@ resource "azurerm_virtual_network_peering" "spoke-2-hub" {
   resource_group_name       = azurerm_resource_group.spoke.name
   virtual_network_name      = azurerm_virtual_network.spoke.name
   remote_virtual_network_id = azurerm_virtual_network.hub.id
-}
-
-# PSQL servers
-resource "azurerm_postgresql_flexible_server" "psql1" {
-  name                   = "psql1"
-  resource_group_name    = azurerm_resource_group.spoke.name
-  location               = azurerm_resource_group.spoke.location
-  version                = "12"
-  delegated_subnet_id    = azurerm_subnet.spokepaas.id
-  private_dns_zone_id    = azurerm_private_dns_zone.dns.id
-  administrator_login    = "tomas"
-  administrator_password = "Azure12345678"
-
-  storage_mb = 32768
-
-  sku_name   = "B_Standard_B1ms"
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.dnsspoke]
-
-}
-
-resource "azurerm_postgresql_flexible_server" "psql2" {
-  name                   = "psql2"
-  resource_group_name    = azurerm_resource_group.spoke.name
-  location               = azurerm_resource_group.spoke.location
-  version                = "12"
-  delegated_subnet_id    = azurerm_subnet.spokepaas.id
-  private_dns_zone_id    = azurerm_private_dns_zone.dns.id
-  administrator_login    = "tomas"
-  administrator_password = "Azure12345678"
-
-  storage_mb = 32768
-
-  sku_name   = "B_Standard_B1ms"
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.dnsspoke]
-
 }
 
 # App VM
